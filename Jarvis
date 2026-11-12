@@ -1,0 +1,672 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J.A.R.V.I.S. | AI System</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(ellipse at 50% 35%, #251b0c 0%, #0b0905 42%, #020202 100%);
+    color: #f5d58b;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+.app {
+    max-width: 600px;
+    min-height: 100vh;
+    margin: auto;
+    padding: 25px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.app::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .16;
+    background-image:
+        linear-gradient(rgba(218,173,85,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(218,173,85,.08) 1px, transparent 1px);
+    background-size: 45px 45px;
+    mask-image: radial-gradient(ellipse, black, transparent 75%);
+}
+
+/* HEADER */
+
+.header {
+    text-align: center;
+    z-index: 2;
+}
+
+.header h1 {
+    font-size: 27px;
+    letter-spacing: 8px;
+    color: #ffe2a0;
+    text-shadow: 0 0 15px #c68b32;
+}
+
+.header p {
+    margin-top: 9px;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: #a98a50;
+}
+
+.status {
+    margin-top: 18px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #d4b36c;
+}
+
+.status span {
+    color: #ffcf67;
+    text-shadow: 0 0 12px #ffbf3d;
+}
+
+/* REACTOR */
+
+.reactor-area {
+    width: 330px;
+    height: 330px;
+    max-width: 100%;
+    position: relative;
+    display: grid;
+    place-items: center;
+    margin: 28px 0 22px;
+    perspective: 900px;
+}
+
+.reactor {
+    width: 300px;
+    height: 300px;
+    max-width: 100%;
+    position: relative;
+    display: grid;
+    place-items: center;
+    transform-style: preserve-3d;
+    transition: filter .3s ease;
+}
+
+/* GOLDEN ATMOSPHERE */
+
+.reactor::before {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    background: #ffb52e;
+    filter: blur(65px);
+    opacity: .17;
+    transition: .3s;
+}
+
+/* OUTER MECHANICAL RING */
+
+.outer-ring {
+    position: absolute;
+    width: 290px;
+    height: 290px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #f4c96d;
+    border-bottom-color: #805019;
+    box-shadow: 0 0 14px rgba(235,177,69,.5);
+    animation: spin 18s linear infinite;
+}
+
+.outer-ring::before,
+.outer-ring::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    border: 2px dashed rgba(237,186,91,.7);
+}
+
+.outer-ring::before {
+    inset: 9px;
+}
+
+.outer-ring::after {
+    inset: 17px;
+    border-style: dotted;
+}
+
+/* SECOND RING */
+
+.ring-two {
+    position: absolute;
+    width: 245px;
+    height: 245px;
+    border-radius: 50%;
+    border: 7px solid transparent;
+    border-left-color: #b77b27;
+    border-right-color: #f5d17a;
+    box-shadow: 0 0 13px rgba(231,177,74,.35);
+    animation: reverseSpin 11s linear infinite;
+}
+
+.ring-two::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,222,148,.5);
+}
+
+/* THIRD RING */
+
+.ring-three {
+    position: absolute;
+    width: 198px;
+    height: 198px;
+    border-radius: 50%;
+    border: 5px solid transparent;
+    border-top-color: #fff0bd;
+    border-bottom-color: #b77b27;
+    box-shadow: 0 0 18px rgba(255,195,77,.5);
+    animation: spin 7s linear infinite;
+}
+
+/* INNER RING */
+
+.ring-four {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 2px dashed #e4b75c;
+    box-shadow: inset 0 0 14px rgba(255,183,63,.2);
+    animation: reverseSpin 14s linear infinite;
+}
+
+/* ORBITING ENERGY DOTS */
+
+.orbit {
+    position: absolute;
+    width: 270px;
+    height: 270px;
+    border-radius: 50%;
+    animation: spin 5s linear infinite;
+}
+
+.orbit::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    background: #fff1bd;
+    border-radius: 50%;
+    box-shadow: 0 0 12px 5px #d99c39;
+}
+
+.orbit-two {
+    width: 220px;
+    height: 220px;
+    animation: reverseSpin 8s linear infinite;
+}
+
+.orbit-two::before {
+    width: 6px;
+    height: 6px;
+    background: #ffbd4d;
+}
+
+/* CENTRAL ENERGY CORE */
+
+.core-shell {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle, #d99b35 0%, #75450d 55%, #1d1306 75%);
+    border: 2px solid #e8bd69;
+    box-shadow:
+        0 0 15px #e3ad4c,
+        0 0 35px rgba(245,181,61,.7),
+        inset 0 0 20px #f4c86b;
+    z-index: 3;
+    animation: corePulse 3s ease-in-out infinite;
+}
+
+.core {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 40% 35%,
+        #ffffff 0%,
+        #fff1bb 16%,
+        #ffc653 38%,
+        #c47a1b 65%,
+        #402407 100%);
+    box-shadow:
+        0 0 15px #fff1b4,
+        0 0 30px #ffbd45,
+        0 0 55px #d58a23;
+    animation: corePulse 2s ease-in-out infinite;
+}
+
+/* SPEAKING STATE */
+
+.reactor.speaking {
+    filter: brightness(1.45);
+}
+
+.reactor.speaking::before {
+    opacity: .65;
+    filter: blur(75px);
+}
+
+.reactor.speaking .core-shell {
+    animation: speakingPulse .42s ease-in-out infinite alternate;
+    box-shadow:
+        0 0 25px #fff0ac,
+        0 0 55px #ffc247,
+        0 0 90px #e99c24,
+        inset 0 0 25px #fff2bb;
+}
+
+.reactor.speaking .core {
+    animation: speakingPulse .32s ease-in-out infinite alternate;
+}
+
+.reactor.speaking .ring-three {
+    filter: brightness(1.8);
+    box-shadow: 0 0 30px #ffd778;
+}
+
+.reactor.speaking .ring-two {
+    filter: brightness(1.5);
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes reverseSpin {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
+@keyframes corePulse {
+    0%, 100% { transform: scale(.96); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes speakingPulse {
+    from {
+        transform: scale(.93);
+        filter: brightness(1);
+    }
+    to {
+        transform: scale(1.12);
+        filter: brightness(1.8);
+    }
+}
+
+/* LABELS */
+
+.reactor-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #c7a15a;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+/* CHAT PANEL */
+
+.chat {
+    width: 100%;
+    height: 240px;
+    overflow-y: auto;
+    padding: 15px;
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(216,171,82,.27);
+    border-radius: 14px;
+    box-shadow: 0 0 25px rgba(204,151,53,.07);
+    backdrop-filter: blur(12px);
+}
+
+.message {
+    max-width: 88%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.bot {
+    color: #f6e5c0;
+    background: rgba(191,135,43,.13);
+    border: 1px solid rgba(222,177,94,.22);
+    margin-right: auto;
+}
+
+.user {
+    color: #fff0d1;
+    background: rgba(226,177,75,.16);
+    border: 1px solid rgba(226,177,75,.3);
+    margin-left: auto;
+}
+
+.typing {
+    display: none;
+    margin-top: 8px;
+    font-size: 11px;
+    color: #d5b16b;
+    letter-spacing: 2px;
+}
+
+/* INPUT */
+
+.footer {
+    width: 100%;
+    display: flex;
+    gap: 9px;
+    margin-top: 14px;
+}
+
+.footer input {
+    flex: 1;
+    min-width: 0;
+    padding: 14px;
+    color: white;
+    background: rgba(15,13,9,.95);
+    border: 1px solid #82612b;
+    border-radius: 10px;
+    outline: none;
+    font-size: 14px;
+}
+
+.footer input:focus {
+    border-color: #f1cb77;
+    box-shadow: 0 0 13px rgba(239,186,76,.25);
+}
+
+.footer button {
+    padding: 0 19px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg,#ffe4a0,#b57a25);
+    color: #201405;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.bottom {
+    margin-top: auto;
+    padding-top: 25px;
+    color: #897044;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-align: center;
+}
+
+@media(max-width:380px) {
+    .reactor-area {
+        transform: scale(.88);
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="header">
+        <h1>J.A.R.V.I.S.</h1>
+        <p>PERSONAL INTELLIGENCE SYSTEM</p>
+    </header>
+
+    <div class="status">
+        <span>●</span> SYSTEM ONLINE
+    </div>
+
+    <div class="reactor-area">
+        <div class="reactor" id="reactor">
+
+            <div class="outer-ring"></div>
+            <div class="ring-two"></div>
+            <div class="ring-three"></div>
+            <div class="ring-four"></div>
+
+            <div class="orbit"></div>
+            <div class="orbit orbit-two"></div>
+
+            <div class="core-shell">
+                <div class="core"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="reactor-label">
+        JARVIS ENERGY CORE
+    </div>
+
+    <div class="chat" id="chat">
+        <div class="message bot">
+            Good evening. I am JARVIS. All systems are online. How may I assist you?
+        </div>
+    </div>
+
+    <div class="typing" id="typing">
+        JARVIS IS PROCESSING...
+    </div>
+
+    <div class="footer">
+        <input
+            type="text"
+            id="messageInput"
+            placeholder="Talk to JARVIS..."
+            autocomplete="off"
+        >
+       <button id="mic" type="button">🎙️</button>
+<button id="send">SEND</button>
+    </div>
+
+    <div class="bottom">
+        J.A.R.V.I.S. • PERSONAL AI ASSISTANT
+    </div>
+
+</div>
+
+<script>
+
+const input = document.getElementById("messageInput");
+const send = document.getElementById("send");
+  
+const mic = document.getElementById("mic");
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+  console.log("Secure:", window.isSecureContext);
+console.log("Mic API:", !!navigator.mediaDevices);
+console.log("Speech API:", !!SpeechRecognition);
+
+let recognition;
+
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+
+  recognition.lang = "en-IN";
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  mic.addEventListener("click", async function () {
+  try {
+    await navigator.mediaDevices.getUserMedia({ audio: true });
+    recognition.start();
+  } catch (error) {
+    alert("Microphone error: " + error.name);
+  }
+});
+
+
+  recognition.onstart = function () {
+    mic.textContent = "🔴";
+  };
+
+  recognition.onresult = function (event) {
+    input.value = event.results[0][0].transcript;
+    sendMessage();
+  };
+
+  recognition.onend = function () {
+    mic.textContent = "🎙️";
+  };
+
+  recognition.onerror = function (event) {
+    mic.textContent = "🎙️";
+    alert("Voice error: " + event.error);
+  };
+
+} else {
+  alert("Voice recognition is not supported.");
+}
+
+const chat = document.getElementById("chat");
+const typing = document.getElementById("typing");
+
+function addMessage(text, sender) {
+    const message = document.createElement("div");
+    message.className = "message " + sender;
+    message.textContent = text;
+    chat.appendChild(message);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function getReply(text) {
+    const msg = text.toLowerCase();
+
+    if (msg.includes("hello") || msg.includes("hi") || msg.includes("hey")) {
+        return "Hello! JARVIS at your service.";
+    }
+
+    if (msg.includes("your name") || msg.includes("who are you")) {
+        return "I am JARVIS, your personal AI assistant.";
+    }
+
+    if (msg.includes("how are you")) {
+        return "All systems are running smoothly. How can I help you?";
+    }
+
+    if (msg.includes("time")) {
+        return "The current time is " + new Date().toLocaleTimeString();
+    }
+
+    if (msg.includes("date")) {
+        return "Today's date is " + new Date().toLocaleDateString();
+    }
+
+    if (msg.includes("study")) {
+        return "Let's focus on your goals. Which subject are we working on?";
+    }
+
+    if (msg.includes("thank")) {
+        return "You're welcome. Always ready to assist.";
+    }
+
+    if (msg.includes("good morning")) {
+        return "Good morning! Systems are ready.";
+    }
+
+    if (msg.includes("good night")) {
+        return "Good night. Have a restful night.";
+    }
+
+    return "I am still learning. My advanced AI brain will be connected in a future update.";
+}
+
+function speak(text) {
+    if (!("speechSynthesis" in window)) return;
+
+    window.speechSynthesis.cancel();
+
+    const voice = new SpeechSynthesisUtterance(text);
+    voice.lang = "en-IN";
+    voice.rate = 0.95;
+    voice.pitch = 1.05;
+    voice.volume = 1;
+
+    window.speechSynthesis.speak(voice);
+}
+  window.speechSynthesis.onvoiceschanged = function () {
+    console.log("JARVIS voice system ready");
+};
+
+function sendMessage() {
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    addMessage(text, "user");
+    input.value = "";
+
+    const reply = getReply(text);
+
+    typing.style.display = "block";
+
+    setTimeout(function() {
+        typing.style.display = "none";
+        addMessage(reply, "bot");
+        speak(reply);
+    }, 800);
+}
+
+send.addEventListener("click", sendMessage);
+
+input.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        sendMessage();
+    }
+});
+
+/* SEPARATE VOICE REACTOR DETECTOR */
+
+const reactor = document.getElementById("reactor");
+
+setInterval(function() {
+    if (
+        "speechSynthesis" in window &&
+        window.speechSynthesis.speaking
+    ) {
+        reactor.classList.add("speaking");
+    } else {
+        reactor.classList.remove("speaking");
+    }
+}, 100);
+
+</script>
+
+</body>
+</html>
+
